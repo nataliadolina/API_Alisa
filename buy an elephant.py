@@ -55,6 +55,20 @@ def handle_dialog(req, res):
         # Получим подсказки
         res['response']['buttons'] = get_suggests(user_id)
         return
+    answer = req['request']['original_utterance'].lower()
+    if 'я' in answer:
+        answer = answer.split()
+        answer.pop(answer.index('я'))
+        answer = ''.join(answer)
+    if answer.strip() in ['ладно', 'куплю', 'покупаю', 'хорошо']:
+        # Пользователь согласился, прощаемся.
+        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+        res['response']['end_session'] = True
+        return
+
+    # Если нет, то убеждаем его купить слона!
+    res['response']['text'] = 'Все говорят "%s", а ты купи слона!' % (req['request']['original_utterance'])
+    res['response']['buttons'] = get_suggests(user_id)
 
     # Сюда дойдем только, если пользователь не новый, и разговор с Алисой уже был начат
     # Обрабатываем ответ пользователя.
