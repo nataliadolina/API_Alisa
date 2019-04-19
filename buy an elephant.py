@@ -43,7 +43,6 @@ def main():
 
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
-    rabbit = False
     if req['session']['new']:
         # Это новый пользователь.
         # Инициализируем сессию и поприветствуем его.
@@ -53,7 +52,6 @@ def handle_dialog(req, res):
         # Заполняем текст ответа
         if 'слона' in res['response']['text'].split():
             res['response']['text'] = 'Привет! Купи кролика!'
-            rabbit = True
         else:
             res['response']['text'] = 'Привет! Купи слона!'
         # Получим подсказки
@@ -65,9 +63,8 @@ def handle_dialog(req, res):
         answer.pop(answer.index('я'))
         answer = ''.join(answer)
     if answer.strip() in ['ладно', 'куплю', 'покупаю', 'хорошо']:
-        if rabbit:
+        if res['response']['text'] == 'Привет! Купи кролика!':
             res['response']['text'] = 'Кролика можно найти на Яндекс.Маркете!'
-            rabbit = False
         else:
             res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
         res['response']['end_session'] = True
