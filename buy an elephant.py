@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 sessionStorage = {}
 
 
-@app.route('/', methods=['POST'])
+@app.route('/post', methods=['POST'])
 # Функция получает тело запроса и возвращает ответ.
 # Внутри функции доступен request.json - это JSON, который отправила нам Алиса в запросе POST
 def main():
@@ -50,10 +50,7 @@ def handle_dialog(req, res):
 
         sessionStorage[user_id] = {'suggests': ["Не хочу.", "Не буду.", "Отстань!", ]}
         # Заполняем текст ответа
-        if 'слона' in res['response']['text'].split():
-            res['response']['text'] = 'Привет! Купи кролика!'
-        else:
-            res['response']['text'] = 'Привет! Купи слона!'
+        res['response']['text'] = 'Привет! Купи слона!'
         # Получим подсказки
         res['response']['buttons'] = get_suggests(user_id)
         return
@@ -63,10 +60,7 @@ def handle_dialog(req, res):
         answer.pop(answer.index('я'))
         answer = ''.join(answer)
     if answer.strip() in ['ладно', 'куплю', 'покупаю', 'хорошо']:
-        if res['response']['text'] == 'Привет! Купи кролика!':
-            res['response']['text'] = 'Кролика можно найти на Яндекс.Маркете!'
-        else:
-            res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
+        res['response']['text'] = 'Слона можно найти на Яндекс.Маркете!'
         res['response']['end_session'] = True
         return
 
